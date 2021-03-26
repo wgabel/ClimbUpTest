@@ -7,6 +7,7 @@ UnityGenerated/
 Library/
 builds/
 ToConsider/
+Logs/
  
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
@@ -46,6 +47,7 @@ Thumbs.db
 *.7z
 .vs/
 .vscode/
+.vsconfig
 SerializedFiles/
 SerializedFiles.meta
 
