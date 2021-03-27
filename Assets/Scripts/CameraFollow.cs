@@ -20,7 +20,7 @@ public class CameraFollow : MonoBehaviour
         Offset = camTransform.position - Target.position;
     }
 
-    private void Update()
+    private void LateUpdate()
     {
         // update position
         Vector3 targetPosition = Target.position + Offset;
