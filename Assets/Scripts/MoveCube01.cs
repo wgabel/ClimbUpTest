@@ -2,44 +2,79 @@ using UnityEngine;
 
 public class MoveCube01 : MonoBehaviour
 {
-    public bool moving = false;
+    private bool moving = false;
 
-    public Vector2 targetPosition;
+    private Vector2 firstCursorPosition;
+    private Vector2 secondCursorPosition;
+    private Vector2 wantedDirection;
 
-    float smoothTime = 0.3f;
-    float yVelocity = 0.0f;
+    private float deltaX;
+    private float deltaY;
+
+    public float maxForce = 5f;
+    public float MaxFallingVelocity = 5f;
+    public float slowingSpeed = 5f;
 
     // Update is called once per frame
+
+    public Transform TempTransform;
+    
     void Update()
     {
-        Debug.DrawLine(transform.localPosition, targetPosition, Color.green);
+        Jump();        
+        UpdateForce();
+        UpdatePosition();
 
-        Jump();
-        if(moving)
+        //Reset position and stop moving when cube touches "ground" ( y == 0 )
+        if (transform.position.y <= 0.0f)
         {
-            transform.localPosition = UpdatedPosition(transform.localPosition);
-        }
-
-        if (Vector3.Distance(transform.localPosition, targetPosition) <= 0.1f)
+            // Unity can overshoot position, because of difference in position between updates(y can be lower than 0)
+            transform.position = new Vector3(transform.position.x, 0f, transform.position.z);
             moving = false;
+        }
     }
 
-    Vector3 UpdatedPosition(Vector3 position)
+    void UpdateForce()
     {
-        return new Vector2(position.x, UpdateForce());
+        //Slow down, basically simulating simple air drag:
+        deltaY -= Time.smoothDeltaTime * slowingSpeed;
+        //Clamp our force, to simulate earth gravity and terminal velocity (simplified)
+        deltaY = Mathf.Clamp(deltaY, -MaxFallingVelocity, Mathf.Infinity);
     }
 
-    float UpdateForce()
+    void UpdatePosition()
     {
-        return Mathf.SmoothDamp(transform.position.y, targetPosition.y, ref yVelocity, smoothTime);
+        if (!moving)
+            return;
+        Vector3 t = transform.localPosition;
+        t.x += deltaX * Time.smoothDeltaTime;
+        t.y += deltaY * Time.smoothDeltaTime;
+        transform.localPosition = t;
     }
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetMouseButtonDown(0))
         {
-            targetPosition = new Vector2(0,transform.localPosition.y + 5f);
+            //Get initial cursor position in screen space(screen pixels):
+            Debug.Log($"first{firstCursorPosition}");
+            firstCursorPosition = Input.mousePosition;
+        }
+
+        if(Input.GetMouseButtonUp(0))
+        {
+            secondCursorPosition = Input.mousePosition;
+            //Get direction
+            wantedDirection = (secondCursorPosition - firstCursorPosition);
+            //Set Forces for movement simulation:
+            //Dot product gives us angle in float relative to target
+            //Normalized direction is to get its magnitude of 1;
+            deltaX = Vector3.Dot(transform.TransformDirection(Vector3.right), wantedDirection.normalized) * maxForce;
+            deltaY = maxForce;
             moving = true;
+            //Visualize our cursor input for 3 seconds(because this is called in one update only)
+            Debug.Log($"second{secondCursorPosition}");
+            Debug.DrawRay(transform.localPosition, wantedDirection, Color.green, duration: 3f);
         }
     }
 }
