@@ -15,15 +15,19 @@ public class CameraFollow : MonoBehaviour
     // This value will change at the runtime depending on target movement. Initialize with zero vector.
     private Vector3 velocity = Vector3.zero;
 
+    private float initialPositionX;
+
     private void Start()
     {
         Offset = camTransform.position - Target.position;
+        initialPositionX = camTransform.position.x;
     }
 
     private void LateUpdate()
     {
         // update position
         Vector3 targetPosition = Target.position + Offset;
+        targetPosition.x = initialPositionX;
         camTransform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, SmoothTime);
 
         // update rotation

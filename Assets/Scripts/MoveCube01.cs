@@ -25,6 +25,10 @@ public class MoveCube01 : MonoBehaviour
         UpdateForce();
         UpdatePosition();
 
+        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+        if (pos.x < 0.0) Debug.Log("I am left of the camera's view.");
+        if (1.0 < pos.x) Debug.Log("I am right of the camera's view.");
+
         //Reset position and stop moving when cube touches "ground" ( y == 0 )
         if (transform.position.y <= 0.0f)
         {
@@ -46,10 +50,22 @@ public class MoveCube01 : MonoBehaviour
     {
         if (!moving)
             return;
+
+        Vector3 pos = Camera.main.WorldToViewportPoint(transform.position);
+        if (pos.x < 0.0f)
+        {
+            deltaX *= -1f;
+        }
+        else if (1.0f < pos.x)
+        {
+            deltaX *= -1f;
+        }
+
         Vector3 t = transform.localPosition;
         t.x += deltaX * Time.smoothDeltaTime;
         t.y += deltaY * Time.smoothDeltaTime;
-        transform.localPosition = t;
+
+        transform.localPosition = t; 
     }
 
     private void Jump()
