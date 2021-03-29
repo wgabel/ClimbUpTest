@@ -58,8 +58,8 @@ public class SlugScript : MonoBehaviour
             Speed = Mathf.Min(Vector2.Distance(EndPoint, StartPoint) / 50, MaxSpeed);
             Force = (EndPoint - StartPoint).normalized * Speed;
             rb.velocity = Force;
-            nextRigidbody.velocity = Force * multiplier;
-            
+            if(nextRigidbody != null)
+                nextRigidbody.velocity = Force * multiplier;
         }
     }
 }
