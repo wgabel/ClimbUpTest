@@ -29,8 +29,5 @@ public class CameraFollow : MonoBehaviour
         Vector3 targetPosition = Target.position + Offset;
         targetPosition.x = initialPositionX;
         camTransform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref velocity, SmoothTime);
-
-        // update rotation
-        //transform.LookAt(Target);
     }
 }

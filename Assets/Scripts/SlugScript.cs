@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class SlugScript : MonoBehaviour
 {
     private Rigidbody2D rb;
     private LineRenderer ForceRay;
-  
 
     private Vector2 StartPoint;
     private Vector2 EndPoint;
@@ -14,9 +11,9 @@ public class SlugScript : MonoBehaviour
     private float MaxSpeed = 10f;
     private float Speed;
     private bool Aiming = false;
+    public Rigidbody2D nextRigidbody;
+    public float multiplier = 0.5f;
 
-
-    // Start is called before the first frame update
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody2D>();        
@@ -61,6 +58,8 @@ public class SlugScript : MonoBehaviour
             Speed = Mathf.Min(Vector2.Distance(EndPoint, StartPoint) / 50, MaxSpeed);
             Force = (EndPoint - StartPoint).normalized * Speed;
             rb.velocity = Force;
+            nextRigidbody.velocity = Force * multiplier;
+            
         }
     }
 }
