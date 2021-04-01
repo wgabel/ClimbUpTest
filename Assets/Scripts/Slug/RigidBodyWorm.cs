@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RigidBodyWorm : MonoBehaviour
@@ -13,7 +11,6 @@ public class RigidBodyWorm : MonoBehaviour
     public float jointSpringMultiplier = 1;
     HingeJoint2D joint;
     Rigidbody2D myRigidbody;
-    // Start is called before the first frame update
     void Start()
     {
         smoothRefs = new Vector3[wormParts.Length];
@@ -21,7 +18,6 @@ public class RigidBodyWorm : MonoBehaviour
         joint = transform.GetComponent<HingeJoint2D>();
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         var j = joint.connectedAnchor;
